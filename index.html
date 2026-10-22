@@ -4,13 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🧭 Ruta de Formación Docente 2026 · MINED</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Ruta de Fortalecimiento de la Práctica Pedagógica - Ministerio de Educación, Ciencia y Tecnología (MINED)">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+    }
+  </script>
   <style>
     :root{
       --bg:#0b1220; --card:#131c2e; --card2:#182238; --text:#e8eef7; --muted:#94a3b8;
       --accent:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --purple:#a78bfa;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:radial-gradient(1200px 600px at 80% -10%, rgba(56,189,248,.15), transparent),var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
     header{padding:2.5rem 1rem 2rem;text-align:center;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:0 0 2rem 2rem}
     header h1{font-size:2rem;margin:0.2rem 0}
     header p{margin:0;opacity:.9}
@@ -35,112 +44,184 @@
     .check input{accent-color:var(--accent);transform:scale(1.3);margin-right:.5rem}
     .progress{height:10px;background:#24304a;border-radius:999px;overflow:hidden;margin-top:.5rem}
     .progress>div{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#38bdf8);transition:width .3s}
+
+    #authScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,10,20,.92);z-index:10;padding:1rem}
+    .auth-card{background:var(--card);border:1px solid #24304a;border-radius:18px;padding:2rem;width:min(420px,100%);text-align:center}
+    .auth-card h1{font-size:1.8rem;margin:0 0 .2rem}
+    .auth-card input{width:100%;padding:.8rem;margin:.5rem 0;background:#0b1220;border:1px solid #24304a;border-radius:10px;color:var(--text);font-size:1rem}
+    .auth-card button{width:100%;padding:.9rem;border:none;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;margin-top:.5rem}
+    .auth-card .error{margin-top:.7rem;color:var(--bad);font-size:.9rem;min-height:1.2em}
+    .auth-hint{margin-top:1rem;color:var(--muted);font-size:.8rem}
+
+    #typewriter{min-height:3rem;font-size:2.2rem;font-weight:800;background:linear-gradient(90deg,#e8eef7,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;margin:1rem 0}
   </style>
 </head>
 <body>
-  <header>
-    <h1>🧭 Ruta de Formación Docente 2026</h1>
-    <p>Fortalecimiento de la Práctica Pedagógica · Ministerio de Educación, Ciencia y Tecnología (MINED)</p>
-  </header>
-  <main>
-    <section id="progreso">
-      <h2>📊 Progreso general</h2>
-      <div class="card">
-        <div class="row">
-          <span class="badge ok">✔️ Separata 8</span>
-          <span class="badge info">✔️ Respondido (recibido 21/10/2026)</span>
+  <div id="authScreen">
+    <div class="auth-card">
+      <h1>🧭 Formación Docente 2026</h1>
+      <p class="muted">Ruta de Fortalecimiento de la Práctica Pedagógica</p>
+      <form id="authForm">
+        <input id="authUser" type="text" placeholder="Usuario" autocomplete="off" required>
+        <input id="authPass" type="password" placeholder="Contraseña" autocomplete="new-password" required>
+        <button type="submit">Entrar</button>
+        <div class="error" id="authError">…</div>
+      </form>
+      <p class="auth-hint">Demo: usuario <strong>abner</strong> · contraseña <strong>fpd2026</strong></p>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <header>
+      <h1 id="typewriter">Ruta de Formación Docente 2026</h1>
+      <p>Fortalecimiento de la Práctica Pedagógica · MINED</p>
+      <button id="logoutBtn" style="margin-top:1rem;padding:.5rem 1rem;border-radius:10px;border:1px solid #24304a;background:transparent;color:var(--text);cursor:pointer">Salir</button>
+    </header>
+    <main>
+      <section id="progreso">
+        <h2>📊 Progreso general</h2>
+        <div class="card">
+          <div class="row">
+            <span class="badge ok">✔️ Separata 8</span>
+            <span class="badge info">✔️ Respondido (recibido 21/10/2026)</span>
+          </div>
+          <label class="check"><input type="checkbox" id="chkBloque11"> <strong>Evidencias – Bloque 11</strong> (Autonomía, ABCD y técnicas de estudio) — <span class="badge warn">Pendiente</span></label>
+          <label class="check"><input type="checkbox" id="chkBloque12"> <strong>Bloque 12</strong> (Mentalidad de crecimiento) — <span class="badge warn">Pendiente</span></label>
+          <label class="check"><input type="checkbox" id="chkBloque13"> <strong>Bloque 13</strong> — <span class="badge warn">Pendiente</span></label>
+          <label class="check"><input type="checkbox" id="chkSeparata9"> <strong>Separata 9</strong> (El viaje de crecer) — <span class="badge warn">Pendiente</span></label>
+          <label class="check"><input type="checkbox" id="chkPortafolio"> <strong>Portafolio Narrativo</strong> (3 entregables) — <span class="badge warn">Pendiente · fecha límite 23/10/2026</span></label>
+          <div class="progress"><div id="bar"></div></div>
+          <p class="muted" id="estado">Marca lo que vayas completando.</p>
         </div>
-        <label class="check"><input type="checkbox" id="chkBloque11"> <strong>Evidencias – Bloque 11</strong> (Autonomía, ABCD y técnicas de estudio) — <span class="badge warn">Pendiente</span></label>
-        <label class="check"><input type="checkbox" id="chkBloque12"> <strong>Bloque 12</strong> (Mentalidad de crecimiento) — <span class="badge warn">Pendiente</span></label>
-        <label class="check"><input type="checkbox" id="chkBloque13"> <strong>Bloque 13</strong> — <span class="badge warn">Pendiente</span></label>
-        <label class="check"><input type="checkbox" id="chkSeparata9"> <strong>Separata 9</strong> (El viaje de crecer) — <span class="badge warn">Pendiente</span></label>
-        <label class="check"><input type="checkbox" id="chkPortafolio"> <strong>Portafolio Narrativo</strong> (3 entregables) — <span class="badge warn">Pendiente · fecha límite 23/10/2026</span></label>
-        <div class="progress"><div id="bar"></div></div>
-        <p class="muted" id="estado">Marca lo que vayas completando.</p>
-      </div>
-    </section>
+      </section>
 
-    <section id="formularios">
-      <h2>📋 Formularios de evidencias</h2>
+      <section id="formularios">
+        <h2>📋 Formularios de evidencias</h2>
+        <div class="card">
+          <h3>Febrero – Marzo 2026</h3>
+          <p class="muted">Bloques 4, 5, 6 y 7</p>
+          <ul>
+            <li>Bloque 4 → <a href="https://forms.gle/nAbLhjry7q71bcsE6" target="_blank">forms.gle/nAbLhjry7q71bcsE6</a></li>
+            <li>Bloque 5 → <a href="https://forms.gle/Gs873Ews6MrGBz4F6" target="_blank">forms.gle/Gs873Ews6MrGBz4F6</a></li>
+            <li>Bloque 6 → <a href="https://docs.google.com/forms/d/e/1FAIpQLSfzt21TzuPa88DIwU7RCa22GSUnbt6LoQeR_nbL_SlXY7XqnQ/viewform" target="_blank">docs.google.com (Bloque 6)</a></li>
+            <li>Bloque 7 → <a href="https://forms.gle/gLHkhxzRPShcRNZb8" target="_blank">forms.gle/gLHkhxzRPShcRNZb8</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Abril – Mayo 2026</h3>
+          <p class="muted">Separata 7, Bloques 8, 9 y 10</p>
+          <ul>
+            <li>Separata 7 → <a href="https://forms.gle/Xskky3Jm8Kiq3VCu9" target="_blank">forms.gle/Xskky3Jm8Kiq3VCu9</a></li>
+            <li>Bloque 8 → <a href="https://forms.gle/zVxbkoJQQvb2u8KR7" target="_blank">forms.gle/zVxbkoJQQvb2u8KR7</a></li>
+            <li>Bloque 9 → <a href="https://forms.gle/zwDyYFbg44WnDa5W8" target="_blank">forms.gle/zwDyYFbg44WnDa5W8</a></li>
+            <li>Bloque 10 → <a href="https://forms.gle/q5MJd3SL1HbrmKFY8" target="_blank">forms.gle/q5MJd3SL1HbrmKFY8</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Junio – Julio 2026</h3>
+          <p class="muted">Separata 8 (✔️ respondido) · Bloques 11, 12 y 13</p>
+          <ul>
+            <li>Separata 8 → <a href="https://forms.gle/QLfonxMdzq6RnKUb9" target="_blank">forms.gle/QLfonxMdzq6RnKUb9</a> <span class="badge ok">✔️ Respondido</span></li>
+            <li>Bloque 11 → <a href="https://forms.gle/Mifo5VuZp5xJtzfz8" target="_blank">forms.gle/Mifo5VuZp5xJtzfz8</a> <span class="badge warn">⬜ Pendiente</span></li>
+            <li>Bloque 12 → <a href="https://forms.gle/Emb4wfyU9AJmSRQn8" target="_blank">forms.gle/Emb4wfyU9AJmSRQn8</a></li>
+            <li>Bloque 13 → <a href="https://forms.gle/JZjopDpDp5JKTWk7" target="_blank">forms.gle/JZjopDpDp5JKTWk7</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Agosto – Octubre 2026</h3>
+          <p class="muted">Separata 9 · Portafolio Narrativo (3 entregables)</p>
+          <ul>
+            <li>Separata 9 → <a href="https://forms.gle/L7FGd1dF8k3yiWe3A" target="_blank">forms.gle/L7FGd1dF8k3yiWe3A</a></li>
+            <li>Portafolio E1 → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a></li>
+            <li>Portafolio E2 → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a></li>
+            <li>Portafolio E3 → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Entrega de Portafolio Digital</h3>
+          <p class="muted">Formulario general</p>
+          <p><a href="https://forms.gle/shaaxfMnS9NfvxVp6" target="_blank">forms.gle/shaaxfMnS9NfvxVp6</a> → Enviar portafolio digital</p>
+        </div>
+      </section>
 
-      <div class="card">
-        <h3>Febrero – Marzo 2026</h3>
-        <p class="muted">Bloques 4, 5, 6 y 7</p>
-        <ul>
-          <li>Bloque 4 → <a href="https://forms.gle/nAbLhjry7q71bcsE6" target="_blank">forms.gle/nAbLhjry7q71bcsE6</a></li>
-          <li>Bloque 5 → <a href="https://forms.gle/Gs873Ews6MrGBz4F6" target="_blank">forms.gle/Gs873Ews6MrGBz4F6</a></li>
-          <li>Bloque 6 → <a href="https://docs.google.com/forms/d/e/1FAIpQLSfzt21TzuPa88DIwU7RCa22GSUnbt6LoQeR_nbL_SlXY7XqnQ/viewform" target="_blank">docs.google.com (Bloque 6)</a></li>
-          <li>Bloque 7 → <a href="https://forms.gle/gLHkhxzRPShcRNZb8" target="_blank">forms.gle/gLHkhxzRPShcRNZb8</a></li>
-        </ul>
-      </div>
+      <section id="portafolio">
+        <h2>📚 Portafolio Narrativo 2026</h2>
+        <div class="card">
+          <p><strong>Fecha límite de los 3 entregables: 23 de octubre de 2026</strong> (¡faltan pocos días!)</p>
+          <ul>
+            <li>Entregable 1 → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a> · "Así cambió mi aula: un viaje de aprendizaje y reflexión"</li>
+            <li>Entregable 2 → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a> · "Aprender se ve: evidencias de crecimiento en el aula"</li>
+            <li>Entregable 3 → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a> · "Así crecimos juntos: memoria viva de mi práctica docente"</li>
+          </ul>
+          <p class="muted">Guía de entregas: <a href="https://drive.google.com/file/d/1fXZMrlHX7z8my95Tg7pd3T2bhfFzbjUo/view?usp=sharing" target="_blank">Drive</a></p>
+        </div>
+      </section>
 
-      <div class="card">
-        <h3>Abril – Mayo 2026</h3>
-        <p class="muted">Separata 7, Bloques 8, 9 y 10</p>
-        <ul>
-          <li>Separata 7 → <a href="https://forms.gle/Xskky3Jm8Kiq3VCu9" target="_blank">forms.gle/Xskky3Jm8Kiq3VCu9</a></li>
-          <li>Bloque 8 → <a href="https://forms.gle/zVxbkoJQQvb2u8KR7" target="_blank">forms.gle/zVxbkoJQQvb2u8KR7</a></li>
-          <li>Bloque 9 → <a href="https://forms.gle/zwDyYFbg44WnDa5W8" target="_blank">forms.gle/zwDyYFbg44WnDa5W8</a></li>
-          <li>Bloque 10 → <a href="https://forms.gle/q5MJd3SL1HbrmKFY8" target="_blank">forms.gle/q5MJd3SL1HbrmKFY8</a></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Junio – Julio 2026</h3>
-        <p class="muted">Separata 8 (✔️ respondido) · Bloques 11, 12 y 13</p>
-        <ul>
-          <li>Separata 8 → <a href="https://forms.gle/QLfonxMdzq6RnKUb9" target="_blank">forms.gle/QLfonxMdzq6RnKUb9</a> <span class="badge ok">✔️ Respondido</span></li>
-          <li>Bloque 11 → <a href="https://forms.gle/Mifo5VuZp5xJtzfz8" target="_blank">forms.gle/Mifo5VuZp5xJtzfz8</a> <span class="badge warn">⬜ Pendiente</span></li>
-          <li>Bloque 12 → <a href="https://forms.gle/Emb4wfyU9AJmSRQn8" target="_blank">forms.gle/Emb4wfyU9AJmSRQn8</a></li>
-          <li>Bloque 13 → <a href="https://forms.gle/JZjopDpDp5JKTWk7" target="_blank">forms.gle/JZjopDpDp5JKTWk7</a></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Agosto – Octubre 2026</h3>
-        <p class="muted">Separata 9 · Portafolio Narrativo (3 entregables)</p>
-        <ul>
-          <li>Separata 9 → <a href="https://forms.gle/L7FGd1dF8k3yiWe3A" target="_blank">forms.gle/L7FGd1dF8k3yiWe3A</a></li>
-          <li>Portafolio E1 – "Así cambió mi aula" → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a></li>
-          <li>Portafolio E2 – "Aprender se ve" → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a></li>
-          <li>Portafolio E3 – "Así crecimos juntos" → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a></li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Entrega de Portafolio Digital</h3>
-        <p class="muted">Formulario general</p>
-        <p><a href="https://forms.gle/shaaxfMnS9NfvxVp6" target="_blank">forms.gle/shaaxfMnS9NfvxVp6</a> → Enviar portafolio digital</p>
-      </div>
-    </section>
-
-    <section id="portafolio">
-      <h2>📚 Portafolio Narrativo 2026</h2>
-      <div class="card">
-        <p><strong>Fecha límite de los 3 entregables: 23 de octubre de 2026</strong> (¡faltan pocos días!)</p>
-        <ul>
-          <li>Entregable 1 → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a> · "Así cambió mi aula: un viaje de aprendizaje y reflexión"</li>
-          <li>Entregable 2 → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a> · "Aprender se ve: evidencias de crecimiento en el aula"</li>
-          <li>Entregable 3 → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a> · "Así crecimos juntos: memoria viva de mi práctica docente"</li>
-        </ul>
-        <p class="muted">Guía de entregas: <a href="https://drive.google.com/file/d/1fXZMrlHX7z8my95Tg7pd3T2bhfFzbjUo/view?usp=sharing" target="_blank">Drive</a></p>
-      </div>
-    </section>
-
-    <section id="faq">
-      <h2>ℹ️ Preguntas frecuentes rápidas</h2>
-      <div class="card">
-        <p>La ruta puede desarrollarse en el horario que convenga (autogestionado).</p>
-        <p><strong>Nota importante:</strong> Docentes de Lenguaje y Matemática (7.°–bachillerato) que participan en la <em>Ruta para la Modernización Educativa</em> no realizan esta ruta; siguen las directrices de modernización.</p>
-        <p>Soporte: soporte1@clases.edu.sv · soporte2@clases.edu.sv · soporte3@clases.edu.sv · Tel: 2410-7030</p>
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>Hecho con 💙 para la formación docente · MINED 2026</p>
-  </footer>
+      <section id="faq">
+        <h2>ℹ️ Preguntas frecuentes rápidas</h2>
+        <div class="card">
+          <p>La ruta puede desarrollarse en el horario que convenga (autogestionado).</p>
+          <p><strong>Nota importante:</strong> Docentes de Lenguaje y Matemática (7.°–bachillerato) que participan en la <em>Ruta para la Modernización Educativa</em> no realizan esta ruta; siguen las directrices de modernización.</p>
+          <p>Soporte: soporte1@clases.edu.sv · soporte2@clases.edu.sv · soporte3@clases.edu.sv · Tel: 2410-7030</p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>Hecho con 💙 para la formación docente · MINED 2026</p>
+    </footer>
+  </div>
 
   <script>
+    // ---------- AUTH ----------
+    const AUTH_KEY = 'fpd-auth';
+    function isAuthed(){ return localStorage.getItem(AUTH_KEY) === '1'; }
+    function login(u, p){
+      if (u === 'abner' && p === 'fpd2026') { localStorage.setItem(AUTH_KEY, '1'); return true; }
+      return false;
+    }
+    function doLogin(e){
+      e.preventDefault();
+      const u = document.getElementById('authUser').value.trim();
+      const p = document.getElementById('authPass').value;
+      const err = document.getElementById('authError');
+      if (login(u, p)) {
+        localStorage.setItem(AUTH_KEY, '1');
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('app').hidden = false;
+      } else {
+        err.textContent = '❌ Usuario o contraseña incorrectos.';
+        return;
+      }
+      err.textContent = '';
+    }
+    document.getElementById('authForm').addEventListener('submit', doLogin);
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem(AUTH_KEY);
+      document.getElementById('app').hidden = true;
+      document.getElementById('authScreen').style.display = 'flex';
+    });
+
+    // ---------- TYPEWRITER ----------
+    const TW = document.getElementById('typewriter');
+    const PHRASES = ['Ruta de Formación Docente 2026', 'Fortalecimiento de la Práctica Pedagógica', 'Aprender · Fortalecer · Crecer'];
+    let phraseIdx = 0, charIdx = 0, deleting = false, timer = null;
+    function type(){
+      const phrase = PHRASES[phraseIdx];
+      if (!deleting) {
+        charIdx++;
+        TW.textContent = phrase.slice(0, charIdx);
+        if (charIdx === phrase.length) { deleting = true; timer = setTimeout(type, 1800); return; }
+        timer = setTimeout(type, 55);
+      } else {
+        charIdx--;
+        TW.textContent = phrase.slice(0, charIdx);
+        if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % PHRASES.length; }
+        timer = setTimeout(type, 30);
+      }
+    }
+    setInterval(() => { if (document.getElementById('app').hidden === false) type(); }, 300);
+
+    // ---------- PROGRESS ----------
     const checks = ['chkBloque11','chkBloque12','chkBloque13','chkSeparata9','chkPortafolio'];
     const load = () => {
       const saved = JSON.parse(localStorage.getItem('fpd-progress') || '{}');
@@ -159,6 +240,14 @@
       updateBar();
     }));
     load();
+
+    // ---------- INIT ----------
+    window.addEventListener('load', () => {
+      if (isAuthed()) {
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('app').hidden = false;
+      }
+    });
   </script>
 </body>
 </html>
