@@ -52,8 +52,6 @@
     .auth-card button{width:100%;padding:.9rem;border:none;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;margin-top:.5rem}
     .auth-card .error{margin-top:.7rem;color:var(--bad);font-size:.9rem;min-height:1.2em}
     .auth-hint{margin-top:1rem;color:var(--muted);font-size:.8rem}
-
-    #typewriter{min-height:3rem;font-size:2.2rem;font-weight:800;background:linear-gradient(90deg,#e8eef7,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent;text-align:center;margin:1rem 0}
   </style>
 </head>
 <body>
@@ -62,36 +60,49 @@
       <h1>🧭 Formación Docente 2026</h1>
       <p class="muted">Ruta de Fortalecimiento de la Práctica Pedagógica</p>
       <form id="authForm">
-        <input id="authUser" type="text" placeholder="Usuario" autocomplete="off" required>
-        <input id="authPass" type="password" placeholder="Contraseña" autocomplete="new-password" required>
-        <button type="submit">Entrar</button>
+        <input id="authUser" type="text" placeholder="Tu nombre" autocomplete="off" required>
+        <button type="submit">Continuar</button>
         <div class="error" id="authError">…</div>
       </form>
-      <p class="auth-hint">Demo: usuario <strong>abner</strong> · contraseña <strong>fpd2026</strong></p>
+      <p class="auth-hint">Ingresa tu nombre para comenzar.</p>
     </div>
   </div>
 
   <div id="app" hidden>
     <header>
-      <h1 id="typewriter">Ruta de Formación Docente 2026</h1>
+      <h1>Ruta de Formación Docente 2026</h1>
       <p>Fortalecimiento de la Práctica Pedagógica · MINED</p>
+      <p>Hola, <strong id="displayName"></strong></p>
       <button id="logoutBtn" style="margin-top:1rem;padding:.5rem 1rem;border-radius:10px;border:1px solid #24304a;background:transparent;color:var(--text);cursor:pointer">Salir</button>
     </header>
     <main>
       <section id="progreso">
-        <h2>📊 Progreso general</h2>
+        <h2>📋 Checklist de formularios</h2>
         <div class="card">
-          <div class="row">
-            <span class="badge ok">✔️ Separata 8</span>
-            <span class="badge info">✔️ Respondido (recibido 21/10/2026)</span>
-          </div>
-          <label class="check"><input type="checkbox" id="chkBloque11"> <strong>Evidencias – Bloque 11</strong> (Autonomía, ABCD y técnicas de estudio) — <span class="badge warn">Pendiente</span></label>
-          <label class="check"><input type="checkbox" id="chkBloque12"> <strong>Bloque 12</strong> (Mentalidad de crecimiento) — <span class="badge warn">Pendiente</span></label>
-          <label class="check"><input type="checkbox" id="chkBloque13"> <strong>Bloque 13</strong> — <span class="badge warn">Pendiente</span></label>
-          <label class="check"><input type="checkbox" id="chkSeparata9"> <strong>Separata 9</strong> (El viaje de crecer) — <span class="badge warn">Pendiente</span></label>
-          <label class="check"><input type="checkbox" id="chkPortafolio"> <strong>Portafolio Narrativo</strong> (3 entregables) — <span class="badge warn">Pendiente · fecha límite 23/10/2026</span></label>
+          <h3>✅ Separata n.°8 – Aprender con autonomía</h3>
+          <a href="https://forms.gle/QLfonxMdzq6RnKUb9" target="_blank">forms.gle/QLfonxMdzq6RnKUb9</a> <span class="badge ok">✔️ Respondido</span>
+          <label class="check"><input type="checkbox" class="form-check" data-key="separata8"> Marcar como completado</label>
+
+          <h3>📌 Bloques y separatas (por periodo)</h3>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque4"> Evidencias – Bloque 4 (Feb–Mar)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque5"> Evidencias – Bloque 5 (Feb–Mar)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque6"> Evidencias – Bloque 6 (Feb–Mar)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque7"> Evidencias – Bloque 7 (Feb–Mar)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="separata7"> Evidencias – Separata 7 (Abr–May)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque8"> Evidencias – Bloque 8 (Abr–May)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque9"> Evidencias – Bloque 9 (Abr–May)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque10"> Evidencias – Bloque 10 (Abr–May)</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque11"> Evidencias – Bloque 11 – Autonomía, ABCD y técnicas de estudio</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque12"> Evidencias – Bloque 12 – Mentalidad de crecimiento</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="bloque13"> Evidencias – Bloque 13</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="separata9"> Evidencias – Separata 9 – El viaje de crecer</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="porta1"> Portafolio Narrativo – Entregable 1</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="porta2"> Portafolio Narrativo – Entregable 2</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="porta3"> Portafolio Narrativo – Entregable 3</div>
+          <div class="check"><input type="checkbox" class="form-check" data-key="entrega"> Entrega de Portafolio Digital</div>
+
           <div class="progress"><div id="bar"></div></div>
-          <p class="muted" id="estado">Marca lo que vayas completando.</p>
+          <p class="muted" id="estado">Marca los formularios completados.</p>
         </div>
       </section>
 
@@ -149,11 +160,10 @@
         <div class="card">
           <p><strong>Fecha límite de los 3 entregables: 23 de octubre de 2026</strong> (¡faltan pocos días!)</p>
           <ul>
-            <li>Entregable 1 → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a> · "Así cambió mi aula: un viaje de aprendizaje y reflexión"</li>
-            <li>Entregable 2 → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a> · "Aprender se ve: evidencias de crecimiento en el aula"</li>
-            <li>Entregable 3 → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a> · "Así crecimos juntos: memoria viva de mi práctica docente"</li>
+            <li>Entregable 1 → <a href="https://forms.gle/Bekkn52jUewtwy8G7" target="_blank">forms.gle/Bekkn52jUewtwy8G7</a></li>
+            <li>Entregable 2 → <a href="https://forms.gle/Kh5txmMsbdiwRD797" target="_blank">forms.gle/Kh5txmMsbdiwRD797</a></li>
+            <li>Entregable 3 → <a href="https://forms.gle/ptpuZSSVGXcp418eA" target="_blank">forms.gle/ptpuZSSVGXcp418eA</a></li>
           </ul>
-          <p class="muted">Guía de entregas: <a href="https://drive.google.com/file/d/1fXZMrlHX7z8my95Tg7pd3T2bhfFzbjUo/view?usp=sharing" target="_blank">Drive</a></p>
         </div>
       </section>
 
@@ -172,24 +182,23 @@
   </div>
 
   <script>
-    // ---------- AUTH ----------
+    // ---------- NOMBRE ----------
     const AUTH_KEY = 'fpd-auth';
+    const NAME_KEY = 'fpd-name';
+    function getName(){ return localStorage.getItem(NAME_KEY) || ''; }
     function isAuthed(){ return localStorage.getItem(AUTH_KEY) === '1'; }
-    function login(u, p){
-      if (u === 'abner' && p === 'fpd2026') { localStorage.setItem(AUTH_KEY, '1'); return true; }
-      return false;
-    }
     function doLogin(e){
       e.preventDefault();
-      const u = document.getElementById('authUser').value.trim();
-      const p = document.getElementById('authPass').value;
+      const name = document.getElementById('authUser').value.trim();
       const err = document.getElementById('authError');
-      if (login(u, p)) {
+      if (name) {
+        localStorage.setItem(NAME_KEY, name);
         localStorage.setItem(AUTH_KEY, '1');
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('app').hidden = false;
+        document.getElementById('displayName').textContent = name;
       } else {
-        err.textContent = '❌ Usuario o contraseña incorrectos.';
+        err.textContent = '❌ Ingresa tu nombre.';
         return;
       }
       err.textContent = '';
@@ -197,38 +206,44 @@
     document.getElementById('authForm').addEventListener('submit', doLogin);
     document.getElementById('logoutBtn').addEventListener('click', () => {
       localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(NAME_KEY);
       document.getElementById('app').hidden = true;
       document.getElementById('authScreen').style.display = 'flex';
     });
 
-
-
-    // ---------- PROGRESS ----------
-    const checks = ['chkBloque11','chkBloque12','chkBloque13','chkSeparata9','chkPortafolio'];
-    const load = () => {
-      const saved = JSON.parse(localStorage.getItem('fpd-progress') || '{}');
-      checks.forEach(id => { const el = document.getElementById(id); if (el && saved[id]) el.checked = true; });
+    // ---------- CHECKLIST DE FORMULARIOS ----------
+    const CHECKS_KEY = 'fpd-checks';
+    function loadChecks(){
+      const saved = JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}');
+      document.querySelectorAll('.form-check').forEach(cb => {
+        const key = cb.dataset.key;
+        if (saved[key]) cb.checked = true;
+        cb.addEventListener('change', () => {
+          const s = JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}');
+          s[key] = cb.checked;
+          localStorage.setItem(CHECKS_KEY, JSON.stringify(s));
+          updateBar();
+        });
+      });
       updateBar();
-    };
-    const updateBar = () => {
-      const done = checks.filter(id => document.getElementById(id).checked).length;
-      document.getElementById('bar').style.width = (done / checks.length * 100) + '%';
-      document.getElementById('estado').textContent = done + '/' + checks.length + ' secciones marcadas como hechas';
-    };
-    checks.forEach(id => document.getElementById(id).addEventListener('change', () => {
-      const saved = JSON.parse(localStorage.getItem('fpd-progress') || '{}');
-      saved[id] = document.getElementById(id).checked;
-      localStorage.setItem('fpd-progress', JSON.stringify(saved));
-      updateBar();
-    }));
-    load();
+    }
+    function updateBar(){
+      const boxes = document.querySelectorAll('.form-check');
+      const checked = Array.from(boxes).filter(b => b.checked).length;
+      const bar = document.getElementById('bar');
+      if (bar) bar.style.width = (checked / boxes.length * 100) + '%';
+      const estado = document.getElementById('estado');
+      if (estado) estado.textContent = checked + ' de ' + boxes.length + ' formularios marcados como completados';
+    }
 
     // ---------- INIT ----------
     window.addEventListener('load', () => {
       if (isAuthed()) {
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('app').hidden = false;
+        document.getElementById('displayName').textContent = getName();
       }
+      loadChecks();
     });
   </script>
 </body>
