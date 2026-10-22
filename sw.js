@@ -1,7 +1,7 @@
 /* PWA - Service Worker para Ruta de Formación Docente 2026
    Estrategia: NETWORK-FIRST (el servidor siempre manda; la caché es respaldo offline).
    Esto evita que el usuario vea versiones viejas de la app. */
-const CACHE_NAME = 'fpd-2026-v3';
+const CACHE_NAME = 'fpd-2026-v4';
 const ASSETS = ['/', '/index.html', '/manifest.json', '/icon.svg'];
 
 self.addEventListener('install', (event) => {
