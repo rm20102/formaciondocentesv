@@ -6,7 +6,7 @@
   <title>🧭 Ruta de Formación Docente 2026 · MINED</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0b1220">
-  <meta name="description" content="Herramienta de seguimiento de la Ruta de Formación Docente 2026 del MINED: checklist desde cero, progreso por nivel y entregables.">
+  <meta name="description" content="Herramienta de seguimiento de la Ruta de Formación Docente 2026 del MINED: checklist desde cero, avance en tiempo real y entregables.">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <script>
     if ('serviceWorker' in navigator) {
@@ -21,24 +21,24 @@
     :root{--bg:#0b1220;--card:#131c2e;--text:#e8eef7;--muted:#94a3b8;--accent:#38bdf8;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--line:#24304a;}
     *{box-sizing:border-box}
     body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,rgba(56,189,248,.15),transparent),var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
-    header{padding:1.8rem 1rem 1.4rem;text-align:center;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:0 0 2rem 2rem}
-    header h1{font-size:1.8rem;margin:.2rem 0}
+    header{padding:1.6rem 1rem 1.2rem;text-align:center;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:0 0 1.6rem 1.6rem}
+    header h1{font-size:1.75rem;margin:.2rem 0}
     header p{margin:.1rem 0;opacity:.92}
     main{max-width:1020px;margin:0 auto;padding:1rem 1rem 3rem}
     section{margin:2rem 0}
-    h2{font-size:1.45rem;border-bottom:2px solid var(--accent);padding-bottom:.3rem;display:inline-block}
-    h3{font-size:1.08rem;margin:0 0 .2rem}
+    h2{font-size:1.4rem;border-bottom:2px solid var(--accent);padding-bottom:.3rem;display:inline-block}
+    h3{font-size:1.05rem;margin:0 0 .2rem}
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:1rem 0}
     .muted{color:var(--muted)}
     a{color:var(--accent);text-decoration:none}
     a:hover{text-decoration:underline}
     .badge{display:inline-block;padding:.12rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700}
     .ok{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid var(--ok)}
-    .warn{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid var(--warn)}
     .info{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid var(--accent)}
-    .btn{background:#1b2740;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:.35rem .7rem;cursor:pointer;font-size:.82rem}
+    .btn{background:#1b2740;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:.4rem .8rem;cursor:pointer;font-size:.85rem}
     .btn:hover{border-color:var(--accent)}
     .btn.warnb{border-color:var(--warn);color:var(--warn)}
+    .btn.primary{background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;color:#fff;font-weight:700}
     ul{list-style:none;padding:0;margin:.4rem 0}
     li.item{display:flex;gap:.6rem;align-items:flex-start;padding:.5rem .2rem;border-bottom:1px dashed #1e2a42}
     li.item:last-child{border-bottom:none}
@@ -48,22 +48,43 @@
     .item-txt .s{display:block;font-size:.8rem;color:var(--muted)}
     .item.done .item-txt .t{text-decoration:line-through;opacity:.55}
     .item-link{font-size:.78rem;white-space:nowrap;align-self:center}
-    .clear-btn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:7px;cursor:pointer;font-size:.75rem;padding:.1rem .4rem;align-self:center}
-    .clear-btn:hover{color:var(--bad);border-color:var(--bad)}
+
+    /* Barra fija de avance */
+    .stickybar{position:sticky;top:0;z-index:6;background:rgba(11,18,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:.5rem 1rem}
+    .sb-inner{max-width:1020px;margin:0 auto;display:flex;align-items:center;gap:.8rem}
+    .sb-track{flex:1;height:10px;background:#1e2a42;border-radius:999px;overflow:hidden}
+    .sb-fill{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#38bdf8);transition:width .25s}
+    .sb-text{font-size:.85rem;white-space:nowrap;font-weight:700}
+
+    /* Bloques colapsables */
+    .fase-head{display:flex;align-items:center;gap:.6rem;cursor:pointer;user-select:none}
+    .fase-head h3{flex:1;margin:0}
+    .chev{transition:transform .2s;color:var(--muted);font-size:.9rem}
+    .fase.collapsed .chev{transform:rotate(-90deg)}
+    .fase.collapsed ul,.fase.collapsed .fase-note{display:none}
+    .fase-note{font-size:.82rem;color:var(--muted);margin:.1rem 0 0}
+
     .bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
     .phase{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem}
     .phase-head{display:flex;justify-content:space-between;gap:.5rem;font-size:.88rem}
     .bar{height:9px;background:#1e2a42;border-radius:999px;overflow:hidden;margin-top:.45rem}
     .bar>div{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#38bdf8);transition:width .3s}
-    .donut-wrap{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
-    .donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#22c55e 0%,#24304a 0%);position:relative}
-    .donut::after{content:'';position:absolute;width:112px;height:112px;border-radius:50%;background:var(--card)}
-    .donut span{position:relative;z-index:1;font-size:1.5rem;font-weight:800}
+
     .steps{counter-reset:s}
     .step{position:relative;padding-left:2.2rem;margin:.7rem 0}
     .step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.1rem;width:1.5rem;height:1.5rem;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:.85rem;font-weight:700;display:grid;place-items:center}
     footer{text-align:center;padding:1.5rem 1rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
-    #authScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,10,20,.94);z-index:10;padding:1rem}
+
+    /* Configuraciones */
+    .modal{position:fixed;inset:0;background:rgba(5,10,20,.85);z-index:20;display:none;align-items:flex-start;justify-content:center;padding:1rem;overflow:auto}
+    .modal.open{display:flex}
+    .modal-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.4rem;width:min(560px,100%);margin:auto}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.4rem}
+    .modal input,.modal select{width:100%;padding:.65rem;margin:.35rem 0;background:#0b1220;border:1px solid var(--line);border-radius:9px;color:var(--text);font-size:.95rem}
+    .modal .row{display:flex;gap:.5rem;flex-wrap:wrap;margin:.6rem 0}
+    .close-x{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
+
+    #authScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,10,20,.94);z-index:30;padding:1rem}
     .auth-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1.8rem;width:min(430px,100%);text-align:center}
     .auth-card input,.auth-card select{width:100%;padding:.75rem;margin:.4rem 0;background:#0b1220;border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:1rem}
     .auth-card button{width:100%;padding:.85rem;border:none;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;margin-top:.5rem}
@@ -98,41 +119,30 @@
       <h1>Ruta de Formación Docente 2026</h1>
       <p>Fortalecimiento de la Práctica Pedagógica · MINED</p>
       <p>Hola, <strong id="displayName"></strong> · <span id="displayNivel"></span></p>
-      <div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn" id="saveBtn">💾 Guardar copia</button>
-        <button class="btn" id="restoreBtn">📂 Restaurar copia</button>
-        <button class="btn" id="shareBtn">🔗 Compartir mi checklist</button>
-        <button class="btn" id="profileBtn">👤 Cambiar perfil</button>
-        <button class="btn warnb" id="resetBtn">Reiniciar</button>
-        <button class="btn" id="logoutBtn">Salir</button>
-        <input type="file" id="fileInput" accept="application/json" hidden>
+      <div style="margin-top:.8rem">
+        <button class="btn primary" id="settingsBtn">⚙️ Configuraciones</button>
       </div>
     </header>
 
-    <main>
-      <section id="progreso">
-        <h2>📊 Progreso de la formación</h2>
-        <div class="card donut-wrap">
-          <div class="donut" id="donut"><span id="donutPct">0%</span></div>
-          <div>
-            <p id="resumen" style="margin:.2rem 0"></p>
-            <p class="muted" id="estado" style="margin:.2rem 0"></p>
-            <p class="muted" style="margin:.2rem 0;font-size:.85rem">Ruta 2026 · <strong>Bloques 1 → 16</strong> + separatas + formaciones prioritarias + portafolio.</p>
-          </div>
-        </div>
-        <div class="bars" id="bars"></div>
-        <div class="card">
-          <h3>💾 Tu progreso nunca se pierde</h3>
-          <p class="muted">El checklist se guarda <strong>en este dispositivo</strong>. Al cerrar la app o apagar el equipo, el progreso <strong>sigue ahí</strong>. Solo se perdería si borras los datos del navegador o desinstalas la app.</p>
-          <p class="muted">Guarda una copia con <strong>“💾 Guardar copia”</strong> (archivo .json) y restáurala en cualquier dispositivo con <strong>“📂 Restaurar copia”</strong>.</p>
-          <p class="muted">Cada persona que abra el enlace tiene <strong>su propio</strong> checklist. Con <strong>“🔗 Compartir mi checklist”</strong> el enlace incluye tu avance para que un compañero parta de él.</p>
-        </div>
-      </section>
+    <!-- BARRA FIJA DE AVANCE -->
+    <div class="stickybar">
+      <div class="sb-inner">
+        <span class="sb-text" id="sbText">0%</span>
+        <div class="sb-track"><div class="sb-fill" id="sbFill"></div></div>
+        <span class="sb-text muted" id="sbCount"></span>
+      </div>
+    </div>
 
+    <main>
       <section id="checklist">
         <h2>✅ Checklist desde cero</h2>
-        <p class="muted">Marcado para <strong id="nivelLabel"></strong>. Marca <strong>✔ Listo</strong> cuando completes cada ítem; usa <strong>✖</strong> para desmarcar.</p>
+        <p class="muted">Marcado para <strong id="nivelLabel"></strong>. Toca cada bloque para contraerlo o extenderlo.</p>
         <div id="fases"></div>
+      </section>
+
+      <section id="progreso">
+        <h2>📊 Avance por fase</h2>
+        <div class="bars" id="bars"></div>
       </section>
 
       <section id="entregables">
@@ -193,21 +203,70 @@
     <footer><p>Herramienta de apoyo para la formación docente · MINED 2026</p></footer>
   </div>
 
+  <!-- CONFIGURACIONES -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 style="margin:0;border:none;font-size:1.25rem">⚙️ Configuraciones</h2>
+        <button class="close-x" id="closeSettings">×</button>
+      </div>
+
+      <div class="card" style="margin:.8rem 0">
+        <h3>👤 Tu perfil</h3>
+        <input id="cfgName" type="text" placeholder="Tu nombre">
+        <select id="cfgNivel">
+          <option value="sec">Docente · Educación Secundaria</option>
+          <option value="tec">Docente · Educación Media Técnica</option>
+          <option value="prim">Docente · Educación Primaria</option>
+          <option value="pi">Docente · Primera Infancia</option>
+          <option value="dir">Equipo directivo · Dirección</option>
+        </select>
+        <div class="row"><button class="btn primary" id="saveProfile">Guardar perfil</button></div>
+      </div>
+
+      <div class="card" style="margin:.8rem 0">
+        <h3>💾 Tus datos</h3>
+        <p class="muted" style="font-size:.88rem">El checklist se guarda <strong>en este dispositivo</strong>: al cerrar la app o apagar el equipo, el progreso <strong>sigue ahí</strong>. Solo se perdería si borras los datos del navegador o desinstalas la app.</p>
+        <div class="row">
+          <button class="btn" id="saveBtn">💾 Guardar copia (.json)</button>
+          <button class="btn" id="restoreBtn">📂 Restaurar copia</button>
+          <button class="btn" id="shareBtn">🔗 Compartir mi checklist</button>
+          <button class="btn warnb" id="resetBtn">🗑 Reiniciar checklist</button>
+        </div>
+        <p class="muted" style="font-size:.85rem">· <strong>Guardar copia:</strong> descarga un archivo .json con tu avance; guárdalo en Drive o iCloud.<br>
+        · <strong>Restaurar copia:</strong> recupera el avance en cualquier dispositivo nuevo.<br>
+        · <strong>Compartir:</strong> genera un enlace que incluye tu avance; quien lo abra puede importarlo con un clic. Cada persona guarda su propio checklist en su dispositivo.</p>
+        <input type="file" id="fileInput" accept="application/json" hidden>
+      </div>
+
+      <div class="card" style="margin:.8rem 0">
+        <h3>ℹ️ Cómo usar la herramienta</h3>
+        <ul class="muted" style="list-style:disc;padding-left:1.1rem">
+          <li>Elige tu rol o nivel: el checklist se adapta (los materiales varían por nivel y los formularios por rol).</li>
+          <li>Marca la casilla de cada ítem que ya completaste; la barra de arriba se actualiza en tiempo real.</li>
+          <li>Toca el título de cada bloque para contraerlo o extenderlo.</li>
+          <li>Abre los formularios con el botón “Abrir ↗” (se abren con tu sesión institucional).</li>
+          <li>Descarga una copia con frecuencia para no depender solo del dispositivo.</li>
+          <li>Puedes instalarla en el iPhone: “Compartir → Añadir a pantalla de inicio”. Funciona sin conexión.</li>
+        </ul>
+      </div>
+
+      <div class="row" style="justify-content:flex-end">
+        <button class="btn" id="logoutBtn2">Cerrar sesión</button>
+        <button class="btn primary" id="closeSettings2">Listo</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ================= NIVELES =================
-    const NIVELES = {
-      sec:  'Docente · Educación Secundaria',
-      tec:  'Docente · Educación Media Técnica',
-      prim: 'Docente · Educación Primaria',
-      pi:   'Docente · Primera Infancia',
-      dir:  'Equipo directivo · Dirección'
-    };
+    const NIVELES = { sec:'Docente · Educación Secundaria', tec:'Docente · Educación Media Técnica', prim:'Docente · Educación Primaria', pi:'Docente · Primera Infancia', dir:'Equipo directivo · Dirección' };
     const DOCENTES = ['prim','sec','tec'];
 
     // ================= RUTA 2026 (desde cero) =================
     const FASES = [
       { id:'f0', name:'Fase 0 · Formaciones prioritarias', note:'Transversales y obligatorias', items:[
-        { key:'antisoborno', label:'Sistema de Gestión Antisoborno', sub:'Unidad 5 habilitada en enero 2026 · portal de Desarrollo Humano', url:'https://sites.google.com/mined.gob.sv/franja-orientaciones/formaciones-priorizadas/sistema-de-gestión-antisoborno', for:['todos'] },
+        { key:'antisoborno', label:'Sistema de Gestión Antisoborno', sub:'Unidad 5 habilitada en enero 2026 · portal de Desarrollo Humano', url:'https://sites.google.com/mined.gob.sv/franja-orientaciones/formaciones-prioritarias/sistema-de-gestión-antisoborno', for:['todos'] },
         { key:'siges', label:'SIGES — Eficiencia administrativa', sub:'Uso efectivo de la plataforma educativa', url:'https://sites.google.com/mined.gob.sv/franja-orientaciones/formaciones-priorizadas/siges', for:['todos'] },
         { key:'ia', label:'Innovación pedagógica: IA de Google', sub:'Formación formativa, sin evaluación', url:'https://sites.google.com/mined.gob.sv/franja-orientaciones/formaciones-priorizadas/ia-de-google', for:['todos'] }
       ]},
@@ -273,175 +332,171 @@
       ]}
     ];
 
-    const CHECKS_KEY = 'fpd-checks-v2';
-    const NAME_KEY = 'fpd-name';
-    const NIVEL_KEY = 'fpd-nivel';
-    const AUTH_KEY = 'fpd-auth';
-
-    const itemsFor = (nivel) => FASES.flatMap(f => f.items).filter(i => i.for.includes('todos') || i.for.includes(nivel));
-
-    function getSaved(){ return JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}'); }
-    function save(s){ localStorage.setItem(CHECKS_KEY, JSON.stringify(s)); }
-    function getNivel(){ return localStorage.getItem(NIVEL_KEY) || 'sec'; }
+    const CHECKS_KEY='fpd-checks-v2', NAME_KEY='fpd-name', NIVEL_KEY='fpd-nivel', AUTH_KEY='fpd-auth', COLL_KEY='fpd-collapsed';
+    const getSaved=()=>JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}');
+    const save=s=>localStorage.setItem(CHECKS_KEY,JSON.stringify(s));
+    const getNivel=()=>localStorage.getItem(NIVEL_KEY)||'sec';
+    const getCollapsed=()=>JSON.parse(localStorage.getItem(COLL_KEY)||'{}');
 
     function render(){
-      const nivel = getNivel();
-      const saved = getSaved();
-      document.getElementById('displayName').textContent = localStorage.getItem(NAME_KEY) || '';
-      document.getElementById('displayNivel').textContent = NIVELES[nivel] || '';
-      document.getElementById('nivelLabel').textContent = NIVELES[nivel] || '';
-      const cont = document.getElementById('fases');
-      cont.innerHTML = '';
-      FASES.forEach(f => {
-        const items = f.items.filter(i => i.for.includes('todos') || i.for.includes(nivel));
-        if (!items.length) return;
-        const card = document.createElement('div');
-        card.className = 'card';
-        const done = items.filter(i => saved[i.key]).length;
-        card.innerHTML = '<h3>' + f.name + '</h3><p class="muted" style="margin:.1rem 0 .2rem">' + f.note + '</p>' +
-          '<p class="muted" style="margin:.2rem 0;font-size:.85rem"><span data-fase="' + f.id + '">' + done + '/' + items.length + '</span> completados</p>';
-        const ul = document.createElement('ul');
-        items.forEach(i => {
-          const li = document.createElement('li');
-          li.className = 'item' + (saved[i.key] ? ' done' : '');
-          li.innerHTML =
-            '<input type="checkbox" class="form-check" data-key="' + i.key + '"' + (saved[i.key] ? ' checked' : '') + '>' +
-            '<span class="item-txt"><span class="t">' + i.label + '</span><span class="s">' + i.sub + '</span></span>' +
-            '<a class="item-link" href="' + i.url + '" target="_blank">Abrir ↗</a>' +
-            '<button class="clear-btn" data-key="' + i.key + '" title="Desmarcar">✖</button>';
+      const nivel=getNivel(), saved=getSaved(), coll=getCollapsed();
+      document.getElementById('displayName').textContent=localStorage.getItem(NAME_KEY)||'';
+      document.getElementById('displayNivel').textContent=NIVELES[nivel]||'';
+      document.getElementById('nivelLabel').textContent=NIVELES[nivel]||'';
+      const cont=document.getElementById('fases'); cont.innerHTML='';
+      FASES.forEach(f=>{
+        const items=f.items.filter(i=>i.for.includes('todos')||i.for.includes(nivel));
+        if(!items.length) return;
+        const done=items.filter(i=>saved[i.key]).length;
+        const card=document.createElement('div');
+        card.className='card fase'+(coll[f.id]?' collapsed':'');
+        card.innerHTML=
+          '<div class="fase-head"><span class="chev">▾</span><h3>'+f.name+'</h3><span class="badge info" data-fase="'+f.id+'">'+done+'/'+items.length+'</span></div>'+
+          '<p class="fase-note">'+f.note+'</p>';
+        const ul=document.createElement('ul');
+        items.forEach(i=>{
+          const li=document.createElement('li');
+          li.className='item'+(saved[i.key]?' done':'');
+          li.innerHTML=
+            '<input type="checkbox" class="form-check" data-key="'+i.key+'"'+(saved[i.key]?' checked':'')+'>'+
+            '<span class="item-txt"><span class="t">'+i.label+'</span><span class="s">'+i.sub+'</span></span>'+
+            '<a class="item-link" href="'+i.url+'" target="_blank">Abrir ↗</a>';
           ul.appendChild(li);
         });
         card.appendChild(ul);
+        card.querySelector('.fase-head').addEventListener('click',()=>{
+          const c=getCollapsed(); c[f.id]=!card.classList.contains('collapsed'); localStorage.setItem(COLL_KEY,JSON.stringify(c));
+          card.classList.toggle('collapsed');
+        });
         cont.appendChild(card);
       });
-      bind();
-      update();
+      bind(); update();
     }
 
     function bind(){
-      document.querySelectorAll('.form-check').forEach(cb => cb.addEventListener('change', () => {
-        const s = getSaved(); s[cb.dataset.key] = cb.checked; save(s);
-        cb.closest('li').classList.toggle('done', cb.checked); update();
-      }));
-      document.querySelectorAll('.clear-btn').forEach(btn => btn.addEventListener('click', () => {
-        const s = getSaved(); delete s[btn.dataset.key]; save(s); render();
+      document.querySelectorAll('.form-check').forEach(cb=>cb.addEventListener('change',()=>{
+        const s=getSaved(); s[cb.dataset.key]=cb.checked; save(s);
+        cb.closest('li').classList.toggle('done',cb.checked); update();
       }));
     }
 
     function update(){
-      const nivel = getNivel();
-      const saved = getSaved();
-      let total = 0, done = 0;
-      const bars = document.getElementById('bars');
-      bars.innerHTML = '';
-      FASES.forEach(f => {
-        const items = f.items.filter(i => i.for.includes('todos') || i.for.includes(nivel));
-        if (!items.length) return;
-        const d = items.filter(i => saved[i.key]).length;
-        total += items.length; done += d;
-        const pct = Math.round(d / items.length * 100);
-        const el = document.createElement('div');
-        el.className = 'phase';
-        el.innerHTML = '<div class="phase-head"><strong>' + f.name.split('·')[1].trim() + '</strong><span>' + d + '/' + items.length + ' · ' + pct + '%</span></div>' +
-          '<div class="bar"><div style="width:' + pct + '%"></div></div>';
+      const nivel=getNivel(), saved=getSaved();
+      let total=0, done=0;
+      const bars=document.getElementById('bars'); bars.innerHTML='';
+      FASES.forEach(f=>{
+        const items=f.items.filter(i=>i.for.includes('todos')||i.for.includes(nivel));
+        if(!items.length) return;
+        const d=items.filter(i=>saved[i.key]).length;
+        total+=items.length; done+=d;
+        const pct=Math.round(d/items.length*100);
+        const el=document.createElement('div');
+        el.className='phase';
+        el.innerHTML='<div class="phase-head"><strong>'+f.name.split('·')[1].trim()+'</strong><span>'+d+'/'+items.length+' · '+pct+'%</span></div><div class="bar"><div style="width:'+pct+'%"></div></div>';
         bars.appendChild(el);
-        const c = document.querySelector('[data-fase="' + f.id + '"]');
-        if (c) c.textContent = d + '/' + items.length;
+        const c=document.querySelector('[data-fase="'+f.id+'"]'); if(c) c.textContent=d+'/'+items.length;
       });
-      const pct = total ? Math.round(done / total * 100) : 0;
-      document.getElementById('donutPct').textContent = pct + '%';
-      document.getElementById('donut').style.background = 'conic-gradient(#22c55e 0%, #38bdf8 ' + pct + '%, #24304a ' + pct + '%)';
-      document.getElementById('resumen').innerHTML = '<strong>' + done + ' de ' + total + '</strong> ítems completados (' + pct + '%)';
-      document.getElementById('estado').textContent = NIVELES[nivel];
+      const pct=total?Math.round(done/total*100):0;
+      document.getElementById('sbFill').style.width=pct+'%';
+      document.getElementById('sbText').textContent=pct+'%';
+      document.getElementById('sbCount').textContent=done+' / '+total;
     }
 
     // ================= COPIA / COMPARTIR =================
-    function b64encode(obj){ const bytes = new TextEncoder().encode(JSON.stringify(obj)); let bin=''; bytes.forEach(b=>{bin+=String.fromCharCode(b);}); return btoa(bin); }
-    function b64decode(str){ const bin = atob(str); const bytes = Uint8Array.from(bin, c=>c.charCodeAt(0)); return JSON.parse(new TextDecoder().decode(bytes)); }
+    function b64encode(o){const b=new TextEncoder().encode(JSON.stringify(o));let s='';b.forEach(x=>s+=String.fromCharCode(x));return btoa(s);}
+    function b64decode(s){const b=atob(s);const by=Uint8Array.from(b,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(by));}
     function exportState(){
-      const payload = { app:'fpd-2026', fecha:new Date().toISOString(), perfil:{ nombre: localStorage.getItem(NAME_KEY)||'', nivel: getNivel() }, estado:getSaved() };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'checklist-formacion-2026-' + new Date().toISOString().slice(0,10) + '.json';
+      const payload={app:'fpd-2026',fecha:new Date().toISOString(),perfil:{nombre:localStorage.getItem(NAME_KEY)||'',nivel:getNivel()},estado:getSaved()};
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+      a.download='checklist-formacion-2026-'+new Date().toISOString().slice(0,10)+'.json';
       document.body.appendChild(a); a.click(); a.remove();
     }
-    function importState(obj, quiet){
-      const incoming = (obj && obj.estado) ? obj.estado : obj;
-      if (!incoming || typeof incoming !== 'object') return;
-      const s = getSaved();
-      Object.keys(incoming).forEach(k => { s[k] = !!incoming[k]; });
-      save(s);
-      if (obj && obj.perfil && obj.perfil.nivel && NIVELES[obj.perfil.nivel]) {
-        localStorage.setItem(NIVEL_KEY, obj.perfil.nivel);
-        if (obj.perfil.nombre) localStorage.setItem(NAME_KEY, obj.perfil.nombre);
+    function importState(obj,quiet){
+      const incoming=(obj&&obj.estado)?obj.estado:obj;
+      if(!incoming||typeof incoming!=='object') return;
+      const s=getSaved(); Object.keys(incoming).forEach(k=>{s[k]=!!incoming[k];}); save(s);
+      if(obj&&obj.perfil&&obj.perfil.nivel&&NIVELES[obj.perfil.nivel]){
+        localStorage.setItem(NIVEL_KEY,obj.perfil.nivel);
+        if(obj.perfil.nombre) localStorage.setItem(NAME_KEY,obj.perfil.nombre);
       }
       render();
-      if (!quiet) alert('Checklist restaurado: ' + Object.keys(incoming).length + ' ítems aplicados.');
+      if(!quiet) alert('Checklist restaurado: '+Object.keys(incoming).length+' ítems aplicados.');
     }
-    document.getElementById('saveBtn').addEventListener('click', exportState);
-    document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('fileInput').click());
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const f = e.target.files[0]; if (!f) return;
-      const r = new FileReader();
-      r.onload = () => { try { importState(JSON.parse(r.result)); } catch(err){ alert('Archivo no válido.'); } };
-      r.readAsText(f); e.target.value = '';
+    document.getElementById('saveBtn').addEventListener('click',exportState);
+    document.getElementById('restoreBtn').addEventListener('click',()=>document.getElementById('fileInput').click());
+    document.getElementById('fileInput').addEventListener('change',e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=()=>{try{importState(JSON.parse(r.result));}catch(err){alert('Archivo no válido.');}};
+      r.readAsText(f); e.target.value='';
     });
-    document.getElementById('shareBtn').addEventListener('click', async () => {
-      const url = location.origin + location.pathname + '#estado=' + b64encode({ estado:getSaved(), perfil:{ nivel:getNivel() } });
-      try { await navigator.clipboard.writeText(url); alert('Enlace copiado ✅\n\nQuien lo abra verá tu checklist con lo que ya marcaste.'); }
-      catch(err){ prompt('Copia este enlace (incluye tu avance):', url); }
+    document.getElementById('shareBtn').addEventListener('click',async()=>{
+      const url=location.origin+location.pathname+'#estado='+b64encode({estado:getSaved(),perfil:{nivel:getNivel()}});
+      try{await navigator.clipboard.writeText(url);alert('Enlace copiado ✅\n\nQuien lo abra verá tu checklist con lo que ya marcaste.');}
+      catch(err){prompt('Copia este enlace (incluye tu avance):',url);}
+    });
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      if(confirm('¿Reiniciar todo el checklist?')){localStorage.removeItem(CHECKS_KEY);render();}
     });
     function checkShared(){
-      const m = location.hash.match(/estado=([^&]+)/);
-      if (!m) return;
-      try {
-        const incoming = b64decode(m[1]);
-        const estado = incoming.estado || incoming;
-        if (confirm('Se recibió un checklist compartido con ' + Object.keys(estado).length + ' ítems marcados.\n\n¿Importarlo a este dispositivo?')) {
-          importState(incoming, true); alert('Checklist compartido importado ✅');
+      const m=location.hash.match(/estado=([^&]+)/); if(!m) return;
+      try{
+        const inc=b64decode(m[1]); const estado=inc.estado||inc;
+        if(confirm('Se recibió un checklist compartido con '+Object.keys(estado).length+' ítems marcados.\n\n¿Importarlo a este dispositivo?')){
+          importState(inc,true); alert('Checklist compartido importado ✅');
         }
-        history.replaceState(null, '', location.pathname);
-      } catch(err){}
+        history.replaceState(null,'',location.pathname);
+      }catch(err){}
     }
 
-    // ================= PERFIL =================
+    // ================= CONFIGURACIONES =================
+    const modal=document.getElementById('settingsModal');
+    function openSettings(){
+      document.getElementById('cfgName').value=localStorage.getItem(NAME_KEY)||'';
+      document.getElementById('cfgNivel').value=getNivel();
+      modal.classList.add('open');
+    }
+    function closeSettings(){ modal.classList.remove('open'); }
+    document.getElementById('settingsBtn').addEventListener('click',openSettings);
+    document.getElementById('closeSettings').addEventListener('click',closeSettings);
+    document.getElementById('closeSettings2').addEventListener('click',closeSettings);
+    modal.addEventListener('click',e=>{ if(e.target===modal) closeSettings(); });
+    document.getElementById('saveProfile').addEventListener('click',()=>{
+      const n=document.getElementById('cfgName').value.trim();
+      const lv=document.getElementById('cfgNivel').value;
+      if(n) localStorage.setItem(NAME_KEY,n);
+      if(lv) localStorage.setItem(NIVEL_KEY,lv);
+      localStorage.setItem(AUTH_KEY,'1');
+      render(); closeSettings();
+    });
+    document.getElementById('logoutBtn2').addEventListener('click',()=>{
+      localStorage.removeItem(AUTH_KEY); localStorage.removeItem(NAME_KEY); localStorage.removeItem(NIVEL_KEY);
+      closeSettings();
+      document.getElementById('app').hidden=true;
+      document.getElementById('authScreen').style.display='flex';
+    });
+
+    // ================= PERFIL INICIAL =================
     function doLogin(e){
       e.preventDefault();
-      const name = document.getElementById('authUser').value.trim();
-      const nivel = document.getElementById('nivelSelect').value;
-      const err = document.getElementById('authError');
-      if (!name){ err.textContent = '❌ Ingresa tu nombre.'; return; }
-      if (!nivel){ err.textContent = '❌ Selecciona tu rol o nivel.'; return; }
-      localStorage.setItem(NAME_KEY, name);
-      localStorage.setItem(NIVEL_KEY, nivel);
-      localStorage.setItem(AUTH_KEY, '1');
-      document.getElementById('authScreen').style.display = 'none';
-      document.getElementById('app').hidden = false;
-      err.textContent = '';
-      render();
+      const name=document.getElementById('authUser').value.trim();
+      const nivel=document.getElementById('nivelSelect').value;
+      const err=document.getElementById('authError');
+      if(!name){err.textContent='❌ Ingresa tu nombre.';return;}
+      if(!nivel){err.textContent='❌ Selecciona tu rol o nivel.';return;}
+      localStorage.setItem(NAME_KEY,name); localStorage.setItem(NIVEL_KEY,nivel); localStorage.setItem(AUTH_KEY,'1');
+      document.getElementById('authScreen').style.display='none';
+      document.getElementById('app').hidden=false;
+      err.textContent=''; render();
     }
-    document.getElementById('authForm').addEventListener('submit', doLogin);
-    document.getElementById('profileBtn').addEventListener('click', () => {
-      document.getElementById('authUser').value = localStorage.getItem(NAME_KEY) || '';
-      document.getElementById('nivelSelect').value = getNivel();
-      document.getElementById('authScreen').style.display = 'flex';
-      document.getElementById('app').hidden = true;
-    });
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem(AUTH_KEY); localStorage.removeItem(NAME_KEY); localStorage.removeItem(NIVEL_KEY);
-      document.getElementById('app').hidden = true;
-      document.getElementById('authScreen').style.display = 'flex';
-    });
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      if (confirm('¿Reiniciar todo el checklist?')) { localStorage.removeItem(CHECKS_KEY); render(); }
-    });
+    document.getElementById('authForm').addEventListener('submit',doLogin);
 
-    window.addEventListener('load', () => {
+    window.addEventListener('load',()=>{
       checkShared();
-      if (localStorage.getItem(AUTH_KEY) === '1') {
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('app').hidden = false;
+      if(localStorage.getItem(AUTH_KEY)==='1'){
+        document.getElementById('authScreen').style.display='none';
+        document.getElementById('app').hidden=false;
       }
       render();
     });
