@@ -201,25 +201,7 @@
       document.getElementById('authScreen').style.display = 'flex';
     });
 
-    // ---------- TYPEWRITER ----------
-    const TW = document.getElementById('typewriter');
-    const PHRASES = ['Ruta de Formación Docente 2026', 'Fortalecimiento de la Práctica Pedagógica', 'Aprender · Fortalecer · Crecer'];
-    let phraseIdx = 0, charIdx = 0, deleting = false, timer = null;
-    function type(){
-      const phrase = PHRASES[phraseIdx];
-      if (!deleting) {
-        charIdx++;
-        TW.textContent = phrase.slice(0, charIdx);
-        if (charIdx === phrase.length) { deleting = true; timer = setTimeout(type, 1800); return; }
-        timer = setTimeout(type, 55);
-      } else {
-        charIdx--;
-        TW.textContent = phrase.slice(0, charIdx);
-        if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % PHRASES.length; }
-        timer = setTimeout(type, 30);
-      }
-    }
-    setInterval(() => { if (document.getElementById('app').hidden === false) type(); }, 300);
+
 
     // ---------- PROGRESS ----------
     const checks = ['chkBloque11','chkBloque12','chkBloque13','chkSeparata9','chkPortafolio'];
