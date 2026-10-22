@@ -95,9 +95,13 @@
       <h1>Ruta de Formación Docente 2026</h1>
       <p>Fortalecimiento de la Práctica Pedagógica · MINED</p>
       <p>Hola, <strong id="displayName"></strong> · Docente de Matemática · Secundaria</p>
-      <div style="margin-top:.8rem">
-        <button class="btn" id="resetBtn">Reiniciar checklist</button>
+      <div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn" id="saveBtn">💾 Guardar copia</button>
+        <button class="btn" id="restoreBtn">📂 Restaurar copia</button>
+        <button class="btn" id="shareBtn">🔗 Compartir mi checklist</button>
+        <button class="btn warnb" id="resetBtn">Reiniciar</button>
         <button class="btn" id="logoutBtn">Salir</button>
+        <input type="file" id="fileInput" accept="application/json" hidden>
       </div>
     </header>
 
@@ -113,6 +117,12 @@
           </div>
         </div>
         <div class="bars" id="bars"></div>
+        <div class="card">
+          <h3>💾 Tu progreso nunca se pierde</h3>
+          <p class="muted">El checklist se guarda <strong>en este dispositivo</strong> (nada se envía a internet). Al cerrar la app o apagar el equipo, el progreso <strong>sigue ahí</strong> al volver a abrir. Solo se perdería si borras los datos del navegador o desinstalas la app.</p>
+          <p class="muted">Recomendación: guarda una copia con <strong>“💾 Guardar copia”</strong> (archivo .json) una vez por semana, y restáurala en cualquier dispositivo nuevo con <strong>“📂 Restaurar copia”</strong>.</p>
+          <p class="muted">Si compartes el enlace, cada compañero tiene <strong>su propio</strong> checklist (guardado en su teléfono). Con <strong>“🔗 Compartir mi checklist”</strong> generas un enlace que incluye tu estado, para que partan de tu avance.</p>
+        </div>
       </section>
 
       <section id="checklist">
@@ -300,6 +310,67 @@
       document.getElementById('estado').textContent = 'Ruta 2026 · Educación Secundaria · ' + new Date().toLocaleDateString('es-SV');
     }
 
+    // ================= COPIA DE SEGURIDAD Y COMPARTIR =================
+    function b64encode(obj){
+      const bytes = new TextEncoder().encode(JSON.stringify(obj));
+      let bin = '';
+      bytes.forEach(b => { bin += String.fromCharCode(b); });
+      return btoa(bin);
+    }
+    function b64decode(str){
+      const bin = atob(str);
+      const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+    function exportState(){
+      const payload = { app:'fpd-2026', fecha:new Date().toISOString(), estado:getSaved() };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'checklist-formacion-2026-' + new Date().toISOString().slice(0,10) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+    function importState(obj, quiet){
+      const incoming = (obj && obj.estado) ? obj.estado : obj;
+      if (!incoming || typeof incoming !== 'object') return;
+      const s = JSON.parse(localStorage.getItem(CHECKS_KEY) || '{}');
+      Object.keys(incoming).forEach(k => { s[k] = !!incoming[k]; });
+      localStorage.setItem(CHECKS_KEY, JSON.stringify(s));
+      render();
+      if (!quiet) alert('Checklist restaurado: ' + Object.keys(incoming).length + ' ítems aplicados.');
+    }
+    document.getElementById('saveBtn').addEventListener('click', exportState);
+    document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => { try { importState(JSON.parse(r.result)); } catch(err){ alert('Archivo no válido.'); } };
+      r.readAsText(f);
+      e.target.value = '';
+    });
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const url = location.origin + location.pathname + '#estado=' + b64encode(getSaved());
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Enlace copiado al portapapeles ✅\n\nQuien lo abra verá tu checklist con lo que ya marcaste.');
+      } catch(err){
+        prompt('Copia este enlace (incluye tu avance):', url);
+      }
+    });
+    function checkShared(){
+      const m = location.hash.match(/estado=([^&]+)/);
+      if (!m) return;
+      try {
+        const incoming = b64decode(m[1]);
+        const n = Object.keys(incoming).length;
+        if (confirm('Se recibió un checklist compartido con ' + n + ' ítems marcados.\n\n¿Importarlo a este dispositivo?')) {
+          importState(incoming, true);
+          alert('Checklist compartido importado ✅');
+        }
+        history.replaceState(null, '', location.pathname);
+      } catch(err){ /* hash inválido */ }
+    }
+
     // ================= NOMBRE =================
     function doLogin(e){
       e.preventDefault();
@@ -324,6 +395,7 @@
     });
 
     window.addEventListener('load', () => {
+      checkShared();
       if (localStorage.getItem(AUTH_KEY) === '1') {
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('app').hidden = false;
